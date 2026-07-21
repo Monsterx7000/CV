@@ -166,6 +166,9 @@ html[dir="ltr"]{direction:ltr}
 
 .foot{text-align:center;color:var(--muted);font-size:12px;padding:14px}
 
+/* رمز QR — مخفيّ على الشاشة، يظهر عند الطباعة فقط */
+.printqr{display:none}
+
 /* ══ الطباعة / PDF ══ */
 @media print{
   @page{size:A4;margin:12mm}
@@ -179,6 +182,11 @@ html[dir="ltr"]{direction:ltr}
   .hero{grid-template-columns:1fr;gap:8px}
   .hero-stats{display:none}
   .hero h1{font-size:20pt}
+  /* رمز QR في ترويسة السيرة المطبوعة */
+  .printqr{display:flex;align-items:center;gap:10px;margin-top:6px}
+  .printqr .qrbox{width:82px;height:82px;flex:0 0 auto}
+  .printqr .qr{width:82px;height:82px;shape-rendering:crispedges}
+  .printqr span{font-size:8.5pt;color:#333;line-height:1.5}
   .stat,.contact li{background:none;border:none;padding:0}
   .contact{gap:14px}
   .tl-item,.skillcat,.edu,.fcard{break-inside:avoid}
