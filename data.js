@@ -53,6 +53,10 @@ window.CV_DATA = {
           "en": "Implemented and supported the organization's ERP system."
         },
         {
+          "ar": "إدارة وتطوير الموقع الإلكتروني لمؤسسة خدمات الأمن والسلامة والإشراف عليه.",
+          "en": "Managed, developed, and supervised the Safety & Security Services organization's website."
+        },
+        {
           "ar": "تقديم الدعم الفني والتواصلي المستمر لمختلف الفرق.",
           "en": "Provided ongoing technical and communication support across teams."
         }
