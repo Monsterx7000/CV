@@ -122,7 +122,12 @@ html[dir="ltr"]{direction:ltr}
 .fcard.plain:hover{transform:none;box-shadow:none;border-color:var(--border)}
 
 /* ── المشاريع المختارة ── */
-.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:13px}
+/* «مختارة»: ثلاثة أعمدة ثابتة لبطاقات أكبر، تتجاوب للأضيق */
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:820px){.fgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.fgrid{grid-template-columns:1fr}}
+/* وضعا المكتبة (بطاقات مختصرة): كثافة أعلى لأن العناصر مئات */
+.fgrid:has(.compact){grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
 .fcard{display:flex;flex-direction:column;text-decoration:none;color:inherit;
   background:var(--card);border:1px solid var(--border);
   border-top:3px solid var(--sc,var(--accent));border-radius:13px;overflow:hidden;transition:.16s}
