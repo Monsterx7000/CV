@@ -53,8 +53,12 @@ window.CV_DATA = {
           "en": "Implemented and supported the organization's ERP system."
         },
         {
-          "ar": "إدارة وتطوير الموقع الإلكتروني لمؤسسة خدمات الأمن والسلامة والإشراف عليه.",
-          "en": "Managed, developed, and supervised the Safety & Security Services organization's website."
+          "ar": "إدارة وتطوير الموقع الإلكتروني للمؤسسة (sssoman.om) والإشراف عليه.",
+          "en": "Managed, developed, and supervised the organization's website (sssoman.om)."
+        },
+        {
+          "ar": "إدارة خدمة البريد الإلكتروني (Email Exchange) وأنظمة مكافحة البريد المزعج (Antispam) وتوثيق البريد (DMARC).",
+          "en": "Administered the email service (Email Exchange), antispam systems, and email authentication (DMARC)."
         },
         {
           "ar": "تقديم الدعم الفني والتواصلي المستمر لمختلف الفرق.",
