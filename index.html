@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>السيرة الذاتية ومعرض الأعمال — عبدالله الذهلي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="loader" class="loader">جارِ التحميل…</div>
+
+<!-- شريط التحكم (لا يُطبع) -->
+<header class="topbar noprint">
+  <div class="tb-in">
+    <a class="tb-btn" href="../index.html" title="الرجوع للمعرض">🏠</a>
+    <strong class="tb-title" data-i18n="brandTitle">السيرة الذاتية ومعرض الأعمال</strong>
+    <div class="tb-sp"></div>
+    <button class="tb-btn" id="langBtn" title="Arabic / English">🌐 <span id="langLabel">EN</span></button>
+    <button class="tb-btn" id="themeBtn" title="الوضع الليلي">🌙</button>
+    <button class="tb-btn primary" id="printBtn" data-i18n="printCv">⬇ حفظ PDF</button>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- ══ الترويسة ══ -->
+  <section class="hero card">
+    <div class="hero-txt">
+      <h1 id="pName"></h1>
+      <p class="role" id="pTitle"></p>
+      <p class="summary" id="pSummary"></p>
+      <ul class="contact" id="pContact"></ul>
+    </div>
+    <div class="hero-stats" id="heroStats"></div>
+  </section>
+
+  <!-- ══ التنقل بين الأقسام (لا يُطبع) ══ -->
+  <nav class="tabs noprint" id="tabs"></nav>
+
+  <div class="cols">
+  <div class="col-main">
+
+    <!-- الخبرة -->
+    <section class="card" id="sec-experience">
+      <h2 data-i18n="experience">الخبرة العملية</h2>
+      <div class="timeline" id="expList"></div>
+    </section>
+
+    <!-- المهارات التقنية الآلية -->
+    <section class="card" id="sec-skills">
+      <h2 data-i18n="autoSkills">المهارات التقنية</h2>
+      <p class="hint" id="skillsHint"></p>
+      <div class="skillcats" id="skillCats"></div>
+    </section>
+
+    <!-- مشاريع مختارة -->
+    <section class="card" id="sec-featured">
+      <h2 data-i18n="featured">مشاريع مختارة</h2>
+      <p class="hint" data-i18n="featuredHint">نماذج تمثّل مجالات العمل المختلفة.</p>
+      <div class="fgrid" id="featuredGrid"></div>
+    </section>
+
+    <!-- أقسام المعرض -->
+    <section class="card noprint" id="sec-portfolio">
+      <h2 data-i18n="portfolio">المعرض الكامل</h2>
+      <p class="hint" data-i18n="portfolioHint">أقسام المعرض — اضغط أي قسم لفتح فهرسه الكامل.</p>
+      <div class="secgrid" id="secGrid"></div>
+    </section>
+
+  </div>
+  <aside class="col-side">
+
+    <!-- خبرات ومهارات يدوية -->
+    <section class="card" id="sec-manual">
+      <h2 data-i18n="capabilities">القدرات والتخصصات</h2>
+      <dl class="deflist" id="manualSkills"></dl>
+    </section>
+
+    <section class="card" id="sec-education">
+      <h2 data-i18n="education">المؤهلات العلمية</h2>
+      <div id="eduList"></div>
+    </section>
+
+    <section class="card" id="sec-certs">
+      <h2 data-i18n="certifications">الشهادات المهنية</h2>
+      <ul class="bullets" id="certList"></ul>
+    </section>
+
+    <section class="card" id="sec-awards">
+      <h2 data-i18n="awards">التكريم والتقدير</h2>
+      <ul class="bullets" id="awardList"></ul>
+    </section>
+
+  </aside>
+  </div>
+
+  <footer class="foot">
+    <span id="footNote"></span>
+  </footer>
+</main>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

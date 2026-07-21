@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>بوابة بطاقات NFC للأصول</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- شريط علوي -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5l-8-3z"/>
+          <path d="M9 12a3 3 0 0 1 6 0"/>
+          <circle cx="12" cy="12" r="1"/>
+        </svg>
+      </span>
+      <div class="brand-text">
+        <h1>بوابة بطاقات NFC للأصول</h1>
+        <p>منظومة أمنية لجرد الأصول وتسجيل دخول/خروج العهد</p>
+      </div>
+    </div>
+    <div id="nfcStatus" class="nfc-badge unknown" title="حالة دعم تقنية NFC">
+      <span class="dot"></span>
+      <span class="label">جارٍ الفحص…</span>
+    </div>
+  </header>
+
+  <!-- تنبيه المحاكاة -->
+  <div id="simNotice" class="sim-notice hidden">
+    <strong>وضع المحاكاة مُفعّل.</strong>
+    هذا المتصفح لا يدعم Web NFC (مدعوم على Chrome لنظام Android فقط). يمكنك تجربة جميع الوظائف عبر أزرار المحاكاة.
+  </div>
+
+  <main class="layout">
+    <!-- العمود الأيمن: العمليات -->
+    <section class="col col-ops">
+      <!-- بطاقة المسح -->
+      <div class="card">
+        <div class="card-head">
+          <h2>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M8 12h8"/></svg>
+            مسح وسم NFC
+          </h2>
+        </div>
+        <p class="muted">قرّب وسم NFC من الجهاز لقراءة بيانات الأصل المخزّنة عليه.</p>
+        <div class="btn-row">
+          <button id="btnScan" class="btn btn-primary">بدء المسح</button>
+          <button id="btnSimScan" class="btn btn-ghost sim-only">محاكاة مسح وسم</button>
+        </div>
+        <div id="scanResult" class="scan-result empty">
+          <span class="placeholder">لم تتم قراءة أي وسم بعد.</span>
+        </div>
+      </div>
+
+      <!-- بطاقة الكتابة -->
+      <div class="card">
+        <div class="card-head">
+          <h2>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+            كتابة بيانات أصل على الوسم
+          </h2>
+        </div>
+        <form id="writeForm" class="form-grid" autocomplete="off">
+          <label class="field">
+            <span>رقم الأصل</span>
+            <input type="text" id="assetId" placeholder="مثال: AST-1024" required />
+          </label>
+          <label class="field">
+            <span>اسم الأصل</span>
+            <input type="text" id="assetName" placeholder="مثال: حاسوب محمول Dell" required />
+          </label>
+          <label class="field">
+            <span>الموقع</span>
+            <input type="text" id="assetLocation" placeholder="مثال: مبنى الإدارة — الدور الثاني" required />
+          </label>
+          <label class="field">
+            <span>الحالة</span>
+            <select id="assetStatus" required>
+              <option value="متوفّر">متوفّر</option>
+              <option value="بعهدة موظف">بعهدة موظف</option>
+              <option value="تحت الصيانة">تحت الصيانة</option>
+              <option value="خارج الخدمة">خارج الخدمة</option>
+              <option value="مفقود">مفقود</option>
+            </select>
+          </label>
+          <label class="field field-full">
+            <span>الموظف المسؤول / العهدة (اختياري)</span>
+            <input type="text" id="assetHolder" placeholder="اسم الموظف عند تسجيل عهدة" />
+          </label>
+          <div class="btn-row field-full">
+            <button type="submit" id="btnWrite" class="btn btn-primary">كتابة على الوسم</button>
+            <button type="button" id="btnSimWrite" class="btn btn-ghost sim-only">محاكاة كتابة</button>
+            <button type="button" id="btnSaveOnly" class="btn btn-outline">حفظ في الجدول فقط</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- تسجيل دخول/خروج العهدة -->
+      <div class="card">
+        <div class="card-head">
+          <h2>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h13"/><path d="m12 8 4 4-4 4"/><path d="M20 4v16"/></svg>
+            تسجيل دخول/خروج العهدة
+          </h2>
+        </div>
+        <p class="muted">امسح وسم الأصل ثم سجّل حركة خروج (تسليم عهدة) أو دخول (استرجاع).</p>
+        <div class="btn-row">
+          <button id="btnCheckOut" class="btn btn-warn">تسجيل خروج (تسليم)</button>
+          <button id="btnCheckIn" class="btn btn-ok">تسجيل دخول (استرجاع)</button>
+        </div>
+        <p id="lastScanned" class="muted small">آخر وسم مقروء: <strong>لا يوجد</strong></p>
+      </div>
+    </section>
+
+    <!-- العمود الأيسر: الأصول والسجل -->
+    <section class="col col-data">
+      <!-- جدول الأصول -->
+      <div class="card">
+        <div class="card-head between">
+          <h2>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 4v16"/></svg>
+            سجل الأصول
+          </h2>
+          <span id="assetCount" class="pill">0 أصل</span>
+        </div>
+        <div class="toolbar">
+          <input type="search" id="searchBox" class="search" placeholder="بحث برقم الأصل، الاسم، الموقع، الحالة…" />
+          <button id="btnExport" class="btn btn-outline btn-sm">تصدير JSON</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>رقم الأصل</th>
+                <th>الاسم</th>
+                <th>الموقع</th>
+                <th>الحالة</th>
+                <th>العهدة</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="assetTableBody">
+              <!-- يُملأ ديناميكياً -->
+            </tbody>
+          </table>
+          <div id="emptyAssets" class="empty-state">لا توجد أصول مسجّلة بعد. اكتب وسماً أو احفظ أصلاً لإضافته.</div>
+        </div>
+      </div>
+
+      <!-- سجل العمليات -->
+      <div class="card">
+        <div class="card-head between">
+          <h2>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            سجل العمليات
+          </h2>
+          <button id="btnClearLog" class="btn btn-danger btn-sm">مسح السجل</button>
+        </div>
+        <ul id="logList" class="log-list">
+          <li class="log-empty">لا توجد عمليات مسجّلة بعد.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- منطقة التنبيهات -->
+  <div id="toastZone" class="toast-zone" aria-live="polite"></div>
+
+  <footer class="footer">
+    <span>منظومة أمنية لإدارة أصول المنشآت · تعمل دون اتصال (localStorage) · واجهة عربية RTL</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
