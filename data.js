@@ -455,8 +455,7 @@ window.SKILLS_AUTO = {
           "ar": "FastAPI / Flask",
           "en": "FastAPI / Flask"
         }
-      ],
-      "live": false
+      ]
     },
     {
       "path": "Featured Projects/02-morasalati",
@@ -484,8 +483,7 @@ window.SKILLS_AUTO = {
           "ar": "Docker والحاويات",
           "en": "Docker & Containers"
         }
-      ],
-      "live": false
+      ]
     },
     {
       "path": "Phone Applications/01-patrol-log",
@@ -517,8 +515,7 @@ window.SKILLS_AUTO = {
           "ar": "تطبيقات الجوال",
           "en": "Mobile Applications"
         }
-      ],
-      "live": false
+      ]
     },
     {
       "path": "Websites/59-nfc-asset-gate",
@@ -558,8 +555,7 @@ window.SKILLS_AUTO = {
           "ar": "واجهات المتصفح المتقدمة",
           "en": "Advanced Browser APIs"
         }
-      ],
-      "live": true
+      ]
     },
     {
       "path": "odoo/1-gym-membership",
@@ -595,8 +591,7 @@ window.SKILLS_AUTO = {
           "ar": "Docker والحاويات",
           "en": "Docker & Containers"
         }
-      ],
-      "live": false
+      ]
     },
     {
       "path": "Featured Projects/07-skills-hub",
@@ -636,8 +631,7 @@ window.SKILLS_AUTO = {
           "ar": "FastAPI / Flask",
           "en": "FastAPI / Flask"
         }
-      ],
-      "live": false
+      ]
     },
     {
       "path": "Featured Projects/05-trading-forecast",
@@ -673,8 +667,7 @@ window.SKILLS_AUTO = {
           "ar": "تصميم واجهات REST APIs",
           "en": "REST API Design"
         }
-      ],
-      "live": false
+      ]
     },
     {
       "path": "Featured Projects/01-playstation-library",
@@ -714,10 +707,10 @@ window.SKILLS_AUTO = {
           "ar": "Docker والحاويات",
           "en": "Docker & Containers"
         }
-      ],
-      "live": false
+      ]
     }
   ],
+  "catalog": [],
   "generated_from": "scan-skills.py",
   "totals": {
     "projects": 520,

@@ -57,20 +57,6 @@
       <div class="skillcats" id="skillCats"></div>
     </section>
 
-    <!-- مشاريع مختارة -->
-    <section class="card" id="sec-featured">
-      <h2 data-i18n="featured">مشاريع مختارة</h2>
-      <p class="hint" data-i18n="featuredHint">نماذج تمثّل مجالات العمل المختلفة.</p>
-      <div class="fgrid" id="featuredGrid"></div>
-    </section>
-
-    <!-- أقسام المعرض -->
-    <section class="card noprint" id="sec-portfolio">
-      <h2 data-i18n="portfolio">المعرض الكامل</h2>
-      <p class="hint" data-i18n="portfolioHint">أقسام المعرض — اضغط أي قسم لفتح فهرسه الكامل.</p>
-      <div class="secgrid" id="secGrid"></div>
-    </section>
-
   </div>
   <aside class="col-side">
 
@@ -97,6 +83,20 @@
 
   </aside>
   </div>
+
+  <!-- أعمالي: بعرض الصفحة كاملاً — مختارة / فهرس المكتبة / المكتبة كاملة -->
+  <section class="card" id="sec-featured">
+    <div class="libhead">
+      <h2 data-i18n="myWork">أعمالي</h2>
+      <div class="segmented noprint" id="libModes"></div>
+    </div>
+    <input type="search" id="libSearch" class="libsearch noprint" hidden>
+    <p class="hint" id="libHint"></p>
+    <div class="fgrid" id="libGrid"></div>
+    <div class="libmore noprint" id="libMore" hidden></div>
+    <!-- شبكة الأقسام تظهر فقط في وضع «مختارة» على النسخة المحلية -->
+    <div class="secgrid noprint" id="secGrid" hidden></div>
+  </section>
 
   <footer class="foot">
     <span id="footNote"></span>

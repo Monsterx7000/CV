@@ -98,8 +98,31 @@ html[dir="ltr"]{direction:ltr}
   background:linear-gradient(90deg,var(--accent),var(--accent2));
   width:0;transition:width .8s cubic-bezier(.2,.8,.2,1)}
 
+/* ── رأس «أعمالي» والتبديل بين الأوضاع ── */
+.libhead{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;
+  margin-bottom:12px;padding-bottom:9px;border-bottom:2px solid var(--accent)}
+.libhead h2{margin:0;border:none;padding:0}
+.segmented{display:inline-flex;background:var(--chip);border:1px solid var(--border);
+  border-radius:10px;padding:3px;gap:2px}
+.segmented button{border:none;background:none;color:var(--muted);font:inherit;font-size:12.5px;
+  font-weight:700;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;transition:.14s}
+.segmented button:hover{color:var(--text)}
+.segmented button.on{background:var(--accent);color:#fff}
+.libsearch{width:100%;box-sizing:border-box;margin-bottom:12px;padding:9px 13px;font:inherit;
+  font-size:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text)}
+.libsearch:focus{outline:none;border-color:var(--accent)}
+.libmore{text-align:center;margin-top:14px}
+.libmore button{background:var(--card);border:1px solid var(--border);color:var(--accent);
+  font:inherit;font-weight:700;padding:8px 22px;border-radius:10px;cursor:pointer}
+.libmore button:hover{border-color:var(--accent)}
+/* بطاقة الفهرس: أصغر، بلا صورة كبيرة */
+.fcard.compact .fthumb{height:74px;font-size:26px}
+.fcard.compact .fname{font-size:13.5px;margin-bottom:4px}
+.fcard.plain{cursor:default}
+.fcard.plain:hover{transform:none;box-shadow:none;border-color:var(--border)}
+
 /* ── المشاريع المختارة ── */
-.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:13px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:13px}
 .fcard{display:flex;flex-direction:column;text-decoration:none;color:inherit;
   background:var(--card);border:1px solid var(--border);
   border-top:3px solid var(--sc,var(--accent));border-radius:13px;overflow:hidden;transition:.16s}

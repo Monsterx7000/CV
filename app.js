@@ -15,8 +15,17 @@
       printCv: "⬇ حفظ PDF",
       experience: "الخبرة العملية",
       autoSkills: "المهارات التقنية",
-      featured: "مشاريع مختارة",
+      myWork: "أعمالي",
+      featured: "أعمالي",
+      mSelected: "مختارة",
+      mIndex: "فهرس المكتبة",
+      mFull: "المكتبة كاملة",
       featuredHint: "نماذج تمثّل مجالات العمل المختلفة.",
+      indexHint: n => `فهرس بكل المشاريع (${n}) — الاسم والقسم والتقنيات.`,
+      fullHint: n => `كل المشاريع (${n}) — اضغط أي مشروع لفتحه.`,
+      searchPh: "ابحث بالاسم أو التقنية…",
+      more: "عرض المزيد",
+      noMatch: "لا نتائج مطابقة.",
       portfolio: "المعرض الكامل",
       portfolioHint: "أقسام المعرض — اضغط أي قسم لفتح فهرسه الكامل.",
       capabilities: "القدرات والتخصصات",
@@ -39,8 +48,17 @@
       printCv: "⬇ Save PDF",
       experience: "Professional Experience",
       autoSkills: "Technical Skills",
-      featured: "Selected Projects",
+      myWork: "My Work",
+      featured: "My Work",
+      mSelected: "Selected",
+      mIndex: "Library Index",
+      mFull: "Full Library",
       featuredHint: "Samples representing different domains of work.",
+      indexHint: n => `Index of all projects (${n}) — name, section, and tech.`,
+      fullHint: n => `All projects (${n}) — click any to open.`,
+      searchPh: "Search by name or tech…",
+      more: "Show more",
+      noMatch: "No matching results.",
       portfolio: "Full Portfolio",
       portfolioHint: "Portfolio sections — click any section to open its full index.",
       capabilities: "Capabilities & Domains",
@@ -74,7 +92,8 @@
   const CV = window.CV_DATA, AUTO = window.SKILLS_AUTO;
 
   // ترجمة حقل ثنائي اللغة {ar,en} مع تراجع للغة الأخرى إن كان فارغاً
-  const t = o => (o && (o[lang] || o[lang === "ar" ? "en" : "ar"])) || "";
+  const t = o => (typeof o === "string") ? o
+    : (o && (o[lang] || o[lang === "ar" ? "en" : "ar"])) || "";
 
   // ── الرسم ────────────────────────────────────────────────────────────────
   function render() {
@@ -93,8 +112,7 @@
     renderHero(L);
     renderExperience();
     renderSkills(L);
-    renderFeatured();
-    renderSections(L);
+    renderWork(L);
     renderManual();
     renderEducation();
     renderList("#certList", CV.certifications);
@@ -162,36 +180,88 @@
     });
   }
 
-  function renderFeatured() {
-    const box = $("#featuredGrid");
-    const list = AUTO.featured || [];
-    box.parentElement.hidden = !list.length;
-    // الصورة المصغّرة اختيارية: من لا صورة له يحصل على أيقونة قسمه بلون القسم،
-    // فتبقى الشبكة متّسقة بدل أن تظهر بطاقات ناقصة.
+  // ── «أعمالي»: ثلاثة أوضاع — مختارة / فهرس المكتبة / المكتبة كاملة ──
+  const PAGE = 60;                 // بطاقات تُعرض دفعةً في وضعَي المكتبة
+  let workMode = "selected";       // selected | index | full
+  let shown = PAGE;
+
+  function catalogAvailable() { return (AUTO.catalog || []).length > 0; }
+
+  function renderWork(L) {
+    // أزرار التبديل — تظهر فقط عند توفّر الفهرس
+    const modesBox = $("#libModes");
+    const modes = [["selected", L.mSelected]];
+    if (catalogAvailable()) modes.push(["index", L.mIndex], ["full", L.mFull]);
+    modesBox.hidden = modes.length < 2;
+    modesBox.innerHTML = modes.map(([m, lbl]) =>
+      `<button data-mode="${m}" class="${m === workMode ? "on" : ""}">${esc(lbl)}</button>`).join("");
+
+    const search = $("#libSearch");
+    const isLib = workMode !== "selected";
+    search.hidden = !isLib;
+    search.placeholder = L.searchPh;
+
+    // شبكة الأقسام: فقط في وضع «مختارة» وعلى النسخة المحلية (فهارسها غير منشورة)
+    const secGrid = $("#secGrid");
+    if (!isLib && !window.CV_EXPORT && (AUTO.sections || []).length) {
+      secGrid.hidden = false;
+      secGrid.innerHTML = AUTO.sections.map(s =>
+        `<a class="seccard" style="--sc:${esc(s.color)}" href="../../${encodeURI(s.folder)}/index.html">` +
+        `<div class="ic">${esc(s.icon || "📁")}</div>` +
+        `<div class="nm">${esc(s.title || s.folder)}</div>` +
+        `<div class="ct">${esc(L.projectsWord(s.count))}</div></a>`).join("");
+    } else {
+      secGrid.hidden = true;
+    }
+
+    if (workMode === "selected") {
+      $("#libHint").textContent = L.featuredHint;
+      $("#libMore").hidden = true;
+      return renderCards(AUTO.featured || [], L, "selected");
+    }
+
+    // فلترة بالبحث ثم عرض تدريجي
+    const q = search.value.trim().toLowerCase();
+    const all = (AUTO.catalog || []).filter(c => {
+      if (!q) return true;
+      const hay = (t(c.name) + " " + (c.techs || []).map(x => x.ar + x.en).join(" ")).toLowerCase();
+      return hay.indexOf(q) >= 0;
+    });
+    $("#libHint").textContent = (workMode === "index" ? L.indexHint : L.fullHint)(all.length);
+    renderCards(all.slice(0, shown), L, workMode);
+
+    const more = $("#libMore");
+    if (all.length > shown) {
+      more.hidden = false;
+      more.innerHTML = `<button>${esc(L.more)} (${all.length - shown})</button>`;
+    } else {
+      more.hidden = true;
+    }
+    if (!all.length) $("#libGrid").innerHTML = `<p class="hint">${esc(L.noMatch)}</p>`;
+  }
+
+  function renderCards(list, L, mode) {
+    const box = $("#libGrid");
+    const compact = mode !== "selected" ? " compact" : "";
+    // في «الفهرس» البطاقات غير قابلة للنقر (أسماء فقط)؛ في «مختارة»/«كامل» تفتح المشروع
+    const linked = mode !== "index";
     box.innerHTML = list.map(p => {
       const s = p.section || {};
       const media = p.thumb
         ? `<img class="fthumb" src="${esc(p.thumb)}" alt="" loading="lazy">`
         : `<div class="fthumb ph">${esc(s.icon || "📁")}</div>`;
-      const chips = (p.techs || []).map(t =>
-        `<span class="fchip">${esc(t[lang] || t.ar)}</span>`).join("");
-      return `<a class="fcard" style="--sc:${esc(s.color || "#1f6fd4")}" ` +
-        `href="${esc(p.link)}">${media}<div class="fbody">` +
+      const chips = (p.techs || []).map(x =>
+        `<span class="fchip">${esc(x[lang] || x.ar)}</span>`).join("");
+      const note = p.note ? `<p class="fnote">${esc(t(p.note))}</p>` : "";
+      const body = `${media}<div class="fbody">` +
         `<div class="fsec">${esc(s.icon || "")} ${esc(s.title || "")}</div>` +
-        `<div class="fname">${esc(t(p.name))}</div>` +
-        `<p class="fnote">${esc(t(p.note))}</p>` +
-        `<div class="fchips">${chips}</div></div></a>`;
+        `<div class="fname">${esc(t(p.name))}</div>${note}` +
+        `<div class="fchips">${chips}</div></div>`;
+      const cls = `fcard${compact}${linked ? "" : " plain"}`;
+      return linked
+        ? `<a class="${cls}" style="--sc:${esc(s.color || "#1f6fd4")}" href="${esc(p.link)}">${body}</a>`
+        : `<div class="${cls}" style="--sc:${esc(s.color || "#1f6fd4")}">${body}</div>`;
     }).join("");
-  }
-
-  function renderSections(L) {
-    // في حزمة النشر لا تُنشر فهارس الأقسام، فنُخفي «المعرض الكامل» كاملاً
-    if (window.CV_EXPORT) { $("#sec-portfolio").hidden = true; return; }
-    $("#secGrid").innerHTML = (AUTO.sections || []).map(s =>
-      `<a class="seccard" style="--sc:${esc(s.color)}" href="../../${encodeURI(s.folder)}/index.html">` +
-      `<div class="ic">${esc(s.icon || "📁")}</div>` +
-      `<div class="nm">${esc(s.title || s.folder)}</div>` +
-      `<div class="ct">${esc(L.projectsWord(s.count))}</div></a>`).join("");
   }
 
   function renderManual() {
@@ -216,11 +286,9 @@
   function renderTabs(L) {
     $("#tabs").innerHTML = [
       ["sec-experience", L.experience], ["sec-skills", L.autoSkills],
-      ["sec-featured", L.featured], ["sec-portfolio", L.portfolio],
-      ["sec-manual", L.capabilities],
+      ["sec-featured", L.myWork], ["sec-manual", L.capabilities],
       ["sec-education", L.education], ["sec-certs", L.certifications]
-    ].filter(([id]) => !(window.CV_EXPORT && id === "sec-portfolio"))
-     .map(([id, lbl]) => `<a href="#${id}">${esc(lbl)}</a>`).join("");
+    ].map(([id, lbl]) => `<a href="#${id}">${esc(lbl)}</a>`).join("");
   }
 
   // ── الأزرار ──────────────────────────────────────────────────────────────
@@ -248,6 +316,28 @@
     $("#themeBtn").addEventListener("click", () =>
       setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
     $("#printBtn").addEventListener("click", () => window.print());
+
+    // تبديل أوضاع «أعمالي»
+    $("#libModes").addEventListener("click", e => {
+      const b = e.target.closest("button[data-mode]");
+      if (!b || b.dataset.mode === workMode) return;
+      workMode = b.dataset.mode;
+      shown = PAGE;
+      $("#libSearch").value = "";
+      renderWork(T[lang]);
+    });
+    // البحث في وضعَي المكتبة (بتأخير بسيط)
+    let deb;
+    $("#libSearch").addEventListener("input", () => {
+      clearTimeout(deb);
+      deb = setTimeout(() => { shown = PAGE; renderWork(T[lang]); }, 160);
+    });
+    // «عرض المزيد»
+    $("#libMore").addEventListener("click", e => {
+      if (!e.target.closest("button")) return;
+      shown += PAGE;
+      renderWork(T[lang]);
+    });
 
     render();
     $("#loader").classList.add("hidden");
